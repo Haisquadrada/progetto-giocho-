@@ -1,4 +1,5 @@
 import arcade
+import altricode
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -59,3 +60,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+    #fix dopo
