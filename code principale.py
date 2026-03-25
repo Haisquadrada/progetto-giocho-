@@ -4,31 +4,34 @@ import altricode
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 SCREEN_TITLE = "Rooms"
-
 PLAYER_SPEED = 5
 
 class Rooms(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-        arcade.set_background_color(arcade.color.SKY_BLUE)
+        arcade.set_background_color(arcade.color.GRAY)
 
-        # Player sprite
+        # 1. Create a SpriteList to hold the player
+        self.player_list = arcade.SpriteList()
         self.player = None
 
     def setup(self):
-        # Load the sprite - ensure the path to your image is correct!
-        # If you don't have the image yet, use arcade.SpriteCircle(20, arcade.color.RED) to test
-        self.player = arcade.Sprite("./assets/ethan.png", scale=0.5)
+        # 2. Initialize the sprite
+        self.player = arcade.Sprite("./assets/ethan.png", scale=0.1)
         self.player.center_x = SCREEN_WIDTH // 2
         self.player.center_y = SCREEN_HEIGHT // 2
+        
+        # 3. Add the player to the list
+        self.player_list.append(self.player)
 
     def on_draw(self):
-        self.clear() # Modern arcade replacement for start_render()
-        self.player.draw()
+        self.clear()
+        # 4. Draw the list, not the individual sprite
+        self.player_list.draw()
 
     def on_update(self, delta_time):
-        # This moves the sprite based on its change_x and change_y properties
-        self.player.update()
+        # 5. Update the list (this calls update() on all sprites inside)
+        self.player_list.update()
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W or key == arcade.key.UP:
