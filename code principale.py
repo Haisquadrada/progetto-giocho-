@@ -14,8 +14,15 @@ class Rooms(arcade.Window):
         # 1. Create a SpriteList to hold the player
         self.player_list = arcade.SpriteList()
         self.player = None
+        
+        # --- NEW: Variable for the background texture ---
+        self.background = None
 
     def setup(self):
+        # --- NEW: Load the background image ---
+        # Replace "path/to/your/background.png" with your actual file path
+        self.background = arcade.load_texture("assets/room.png")
+
         # 2. Initialize the sprite
         self.player = arcade.Sprite("./assets/ethan.png", scale=0.1)
         self.player.center_x = SCREEN_WIDTH // 2
@@ -26,12 +33,33 @@ class Rooms(arcade.Window):
 
     def on_draw(self):
         self.clear()
+        
+        # --- NEW: Draw the background ---
+        # This draws the texture scaled to fill the entire screen
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        
         # 4. Draw the list, not the individual sprite
         self.player_list.draw()
 
     def on_update(self, delta_time):
         # 5. Update the list (this calls update() on all sprites inside)
         self.player_list.update()
+
+        # Check the Left edge
+        if self.player.left < 0:
+            self.player.left = 0
+        
+        # Check the Right edge
+        elif self.player.right > SCREEN_WIDTH:
+            self.player.right = SCREEN_WIDTH
+
+        # Check the Bottom edge
+        if self.player.bottom < 0:
+            self.player.bottom = 0
+            
+        # Check the Top edge 
+        elif self.player.top > SCREEN_HEIGHT:
+            self.player.top = SCREEN_HEIGHT
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W or key == arcade.key.UP:
@@ -56,7 +84,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
     #fix dopo
