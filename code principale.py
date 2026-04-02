@@ -11,53 +11,54 @@ class Rooms(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.GRAY)
 
-        # 1. Create a SpriteList to hold the player
+        # Create SpriteLists for organization and performance
+        self.background_list = arcade.SpriteList()
         self.player_list = arcade.SpriteList()
-        self.player = None
         
-        # --- NEW: Variable for the background texture ---
-        self.background = None
+        self.player = None
+        self.background_sprite = None
 
     def setup(self):
-        # --- NEW: Load the background image ---
-        # Replace "path/to/your/background.png" with your actual file path
-        self.background = arcade.load_texture("assets/room.png")
+        # 1. Setup Background as a Sprite
+        self.background_sprite = arcade.Sprite("assets/room.png")
+        
+        # Position the background in the center
+        self.background_sprite.center_x = SCREEN_WIDTH // 2
+        self.background_sprite.center_y = SCREEN_HEIGHT // 2
+        
+        # Scale the background to fit the screen size exactly
+        self.background_sprite.width = SCREEN_WIDTH
+        self.background_sprite.height = SCREEN_HEIGHT
+        
+        self.background_list.append(self.background_sprite)
 
-        # 2. Initialize the sprite
-        self.player = arcade.Sprite("./assets/ethan.png", scale=0.1)
+        # 2. Setup Player
+        self.player = arcade.Sprite("assets/ethan.png", scale=0.1)
         self.player.center_x = SCREEN_WIDTH // 2
         self.player.center_y = SCREEN_HEIGHT // 2
         
-        # 3. Add the player to the list
         self.player_list.append(self.player)
 
     def on_draw(self):
         self.clear()
         
-        # --- NEW: Draw the background ---
-        # This draws the texture scaled to fill the entire screen
-        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        # Draw the background list first
+        self.background_list.draw()
         
-        # 4. Draw the list, not the individual sprite
+        # Draw the player list second (so they stay on top)
         self.player_list.draw()
 
     def on_update(self, delta_time):
-        # 5. Update the list (this calls update() on all sprites inside)
         self.player_list.update()
 
-        # Check the Left edge
+        # Simple Boundary Checking
         if self.player.left < 0:
             self.player.left = 0
-        
-        # Check the Right edge
         elif self.player.right > SCREEN_WIDTH:
             self.player.right = SCREEN_WIDTH
 
-        # Check the Bottom edge
         if self.player.bottom < 0:
             self.player.bottom = 0
-            
-        # Check the Top edge 
         elif self.player.top > SCREEN_HEIGHT:
             self.player.top = SCREEN_HEIGHT
 
@@ -84,6 +85,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-    #fix dopo
