@@ -1,6 +1,7 @@
 import arcade
 import random
-import arcade.math 
+import arcade.math
+import altricode
 
 # Constants
 SCREEN_WIDTH = 1280
