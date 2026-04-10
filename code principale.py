@@ -1,7 +1,7 @@
 import arcade
 import random
 import arcade.math
-import altricode
+import altricode # Keeping this as requested
 
 # Constants
 SCREEN_WIDTH = 1280
@@ -9,16 +9,16 @@ SCREEN_HEIGHT = 720
 SCREEN_TITLE = "Rooms"
 PLAYER_SPEED = 5
 
-# Door and Paper Coordinates
+# Door and Paper Coordinates (Using your new 525 Y-coordinate)
 PAPER_X, PAPER_Y = 745, 525
 RIGHT_DOOR_X = 1200
 
-# Questions Data
+# Questions Data (Your new existential questions)
 QUESTIONS = [
     {"text": "Do you deserve to be here?", "answer": "Y"},
     {"text": "Have you tried to avoid this?", "answer": "N"},
     {"text": "Do you regret your life?", "answer": "Y"},
-    {"text": "Are you in peace with God?", "answer": "N"},
+    {"text": "Were you in peace with God?", "answer": "N"},
     {"text": "Are you a sinner?", "answer": "Y"},
     {"text": "Do you deserve forgiveness?", "answer": "N"},
     {"text": "Were you pure?", "answer": "N"},
@@ -32,7 +32,7 @@ class Rooms(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.BLACK)
 
-        # Sprite Lists (Required for stability in 3.3.3)
+        # Sprite Lists
         self.background_list = arcade.SpriteList()
         self.player_list = arcade.SpriteList()
         self.ui_box_list = arcade.SpriteList()
@@ -43,8 +43,9 @@ class Rooms(arcade.Window):
         self.ui_box = None
         self.jumpscare_sprite = None
         
-        # Music
+        # --- Sound Variables ---
         self.bgm = None
+        self.jumpscare_sfx = None # New placeholder for SFX
         
         # Game Logic Variables
         self.room_number = 1
@@ -77,19 +78,22 @@ class Rooms(arcade.Window):
         self.ui_box_list.append(self.ui_box)
         
         # 4. Setup Jumpscare Sprite
-        self.jumpscare_sprite = arcade.Sprite("assets/paranoid_android.png", scale=1.7) 
+        self.jumpscare_sprite = arcade.Sprite("assets/jumpscareimage.png", scale=4.2) 
         self.jumpscare_sprite.center_x = SCREEN_WIDTH // 2
         self.jumpscare_sprite.center_y = SCREEN_HEIGHT // 2
         self.jumpscare_list.append(self.jumpscare_sprite)
 
-        # 5. Setup & Play Music (FIXED FOR 3.3.3)
-        # CHANGE "your_music_file.mp3" TO YOUR ACTUAL FILENAME
+        # 5. Setup Audio
         try:
+            # Main Background Music
             self.bgm = arcade.load_sound("assets/Hunting Bears.mp3")
-            # In 3.3.3, the argument is 'loop', not 'looping'
             arcade.play_sound(self.bgm, volume=0.01, loop=True)
+            
+            # --- JUMPSCARE SFX ---
+            # CHANGE "scream.wav" TO YOUR ACTUAL FILENAME
+            self.jumpscare_sfx = arcade.load_sound("assets/jumpscare.mp3") 
         except Exception as e:
-            print(f"Music failed to load: {e}")
+            print(f"Audio failed to load: {e}")
 
     def on_draw(self):
         self.clear()
@@ -102,11 +106,9 @@ class Rooms(arcade.Window):
         self.background_list.draw()
         self.player_list.draw()
 
-        # UI: Room Counter
         arcade.draw_text(f"Room: {self.room_number}", 20, SCREEN_HEIGHT - 40, 
                          arcade.color.WHITE, 20, bold=True)
 
-        # UI: Question Overlay
         if self.state == "ASKING_QUESTION":
             self.ui_box_list.draw()
             
@@ -158,12 +160,18 @@ class Rooms(arcade.Window):
             self.player.center_x = 150 
             self.answered_correctly = False
             
-            if random.random() < 0.15:
+            # 15% chance of a jumpscare
+            if random.random() < 0.9:
                 self.show_jumpscare = True
-                self.jumpscare_timer = 1.5
+                self.jumpscare_timer = 2
+                
+                # --- PLAY JUMPSCARE SOUND ---
+                if self.jumpscare_sfx:
+                    arcade.play_sound(self.jumpscare_sfx, volume=0.085)
 
     def reset_to_start(self):
         self.room_number = 1
+        # Start player back in the middle for the reset
         self.player.center_x = SCREEN_WIDTH // 2
         self.answered_correctly = False
         self.state = "PLAYING"
