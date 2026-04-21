@@ -1,30 +1,28 @@
 import arcade
 import random
 import arcade.math
-import altricode # Keeping this as requested
 
-# Constants
+# Costanti
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 SCREEN_TITLE = "Rooms"
 PLAYER_SPEED = 5
 
-# Door and Paper Coordinates (Using your new 525 Y-coordinate)
 PAPER_X, PAPER_Y = 745, 525
 RIGHT_DOOR_X = 1200
 
-# Questions Data (Your new existential questions)
+# Domande e risposte
 QUESTIONS = [
-    {"text": "Do you deserve to be here?", "answer": "Y"},
-    {"text": "Have you tried to avoid this?", "answer": "N"},
-    {"text": "Do you regret your life?", "answer": "Y"},
-    {"text": "Were you in peace with God?", "answer": "N"},
-    {"text": "Are you a sinner?", "answer": "Y"},
-    {"text": "Do you deserve forgiveness?", "answer": "N"},
-    {"text": "Were you pure?", "answer": "N"},
-    {"text": "Were you blasphemous?", "answer": "Y"},
-    {"text": "Did you abuse the grace?", "answer": "Y"},
-    {"text": "Do you recognize the Lamb's blood?", "answer": "Y"},
+    {"text": "Did you get slimed?", "answer": "Y"},
+    {"text": "Are you going to keep doomscrolling if you get a second chance?", "answer": "N"},
+    {"text": "Did you see it coming, or was it John Cena?", "answer": "N"},
+    {"text": "Is 'In Rainbows' the best Radiohead album?", "answer": "N"},
+    {"text": "So is it 'The Bends'?", "answer": "Y"},
+    {"text": "Is Mohammad Saif a good person?", "answer": "N"},
+    {"text": "Are you racist?", "answer": "N"},
+    {"text": "You lied, didn't you brochacho?", "answer": "Y"},
+    {"text": "Is John Frusciante the goat?", "answer": "Y"},
+    {"text": "x(x + 1) + 2(x² - 1) = x(x - 1) - 3(x² - 1) + 2x : il risultato è +-2?", "answer": "N"},
 ]
 
 class Rooms(arcade.Window):
@@ -32,7 +30,7 @@ class Rooms(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.BLACK)
 
-        # Sprite Lists
+        # Sprite List
         self.background_list = arcade.SpriteList()
         self.player_list = arcade.SpriteList()
         self.ui_box_list = arcade.SpriteList()
@@ -43,16 +41,16 @@ class Rooms(arcade.Window):
         self.ui_box = None
         self.jumpscare_sprite = None
         
-        # --- Sound Variables ---
+        # Variabili di suoni
         self.bgm = None
-        self.jumpscare_sfx = None # New placeholder for SFX
+        self.jumpscare_sfx = None 
         
-        # Game Logic Variables
+        # Variabili di logica del gioco
         self.room_number = 1
         self.answered_correctly = False
         self.state = "PLAYING" 
         
-        # Jumpscare Logic
+        # Logica Jumpscare
         self.show_jumpscare = False
         self.jumpscare_timer = 0
 
@@ -65,32 +63,31 @@ class Rooms(arcade.Window):
         self.background_sprite.height = SCREEN_HEIGHT
         self.background_list.append(self.background_sprite)
 
-        # 2. Setup Player
+        # 2. Setup giocatore
         self.player = arcade.Sprite("assets/ethan.png", scale=0.1)
         self.player.center_x = SCREEN_WIDTH // 2
         self.player.center_y = SCREEN_HEIGHT // 2
         self.player_list.append(self.player)
         
         # 3. Setup UI Box
-        self.ui_box = arcade.SpriteSolidColor(600, 300, color=(0, 0, 0, 230))
+        self.ui_box = arcade.SpriteSolidColor(700, 300, color=(0, 0, 0, 230))
         self.ui_box.center_x = SCREEN_WIDTH // 2
         self.ui_box.center_y = SCREEN_HEIGHT // 2
         self.ui_box_list.append(self.ui_box)
         
-        # 4. Setup Jumpscare Sprite
+        #Setup jumpscare
         self.jumpscare_sprite = arcade.Sprite("assets/jumpscareimage.png", scale=4.2) 
         self.jumpscare_sprite.center_x = SCREEN_WIDTH // 2
         self.jumpscare_sprite.center_y = SCREEN_HEIGHT // 2
         self.jumpscare_list.append(self.jumpscare_sprite)
 
-        # 5. Setup Audio
+        #Suoni
         try:
-            # Main Background Music
+            # Radiohead
             self.bgm = arcade.load_sound("assets/Hunting Bears.mp3")
-            arcade.play_sound(self.bgm, volume=0.01, loop=True)
+            arcade.play_sound(self.bgm, volume=0.02, loop=True)
             
-            # --- JUMPSCARE SFX ---
-            # CHANGE "scream.wav" TO YOUR ACTUAL FILENAME
+          
             self.jumpscare_sfx = arcade.load_sound("assets/jumpscare.mp3") 
         except Exception as e:
             print(f"Audio failed to load: {e}")
@@ -99,7 +96,7 @@ class Rooms(arcade.Window):
         self.clear()
 
         if self.state == "FREE":
-            arcade.draw_text("You shall rise", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 
+            arcade.draw_text("You scaped the ", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 
                              arcade.color.RED, 50, anchor_x="center")
             return
 
@@ -160,19 +157,20 @@ class Rooms(arcade.Window):
             self.player.center_x = 150 
             self.answered_correctly = False
             
-            # 15% chance of a jumpscare
-            if random.random() < 0.9:
+            # 29% di probabilità di jumpscare ad ogni nuova stanza
+            if random.random() < 0.29:
                 self.show_jumpscare = True
                 self.jumpscare_timer = 2
                 
-                # --- PLAY JUMPSCARE SOUND ---
+                
                 if self.jumpscare_sfx:
                     arcade.play_sound(self.jumpscare_sfx, volume=0.085)
 
     def reset_to_start(self):
         self.room_number = 1
-        # Start player back in the middle for the reset
+        # Dopo una risposta sbagliata, riportiamo il giocatore al centro
         self.player.center_x = SCREEN_WIDTH // 2
+        self.player.center_y = SCREEN_HEIGHT // 2
         self.answered_correctly = False
         self.state = "PLAYING"
 
@@ -200,7 +198,9 @@ class Rooms(arcade.Window):
                     self.reset_to_start()
             elif key == arcade.key.ESCAPE:
                 self.state = "PLAYING"
-                self.player.center_x -= 70 
+                # Dopo una risposta giusta, riportiamo il giocatore al centro
+                self.player.center_x = SCREEN_WIDTH // 2
+                self.player.center_y = SCREEN_HEIGHT // 2
 
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.W, arcade.key.S, arcade.key.UP, arcade.key.DOWN):
