@@ -96,8 +96,10 @@ class Rooms(arcade.Window):
         self.clear()
 
         if self.state == "FREE":
-            arcade.draw_text("You scaped the ", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 
-                             arcade.color.RED, 50, anchor_x="center")
+            arcade.draw_text("You scaped", SCREEN_WIDTH/2 - 140, SCREEN_HEIGHT/2, 
+                             arcade.color.WHITE, 50, anchor_x="center")
+            arcade.draw_text("The Hub", SCREEN_WIDTH/2 + 140, SCREEN_HEIGHT/2, 
+                             arcade.color.ORANGE, 50, anchor_x="center")
             return
 
         self.background_list.draw()
